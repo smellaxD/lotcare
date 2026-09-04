@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lotcare — Gestione lotti di produzione</title>
+<meta name="description" content="Lotcare: gestione lotti di produzione, clienti e fornitori. Locale, Markdown, tuo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#141019;
+    --bg2:#1A1426;
+    --surface:#1F1830;
+    --surface2:#271E3D;
+    --lavanda:#C5B4E3;
+    --lavanda-bright:#A78BFA;
+    --lavanda-deep:#7C3AED;
+    --beige:#E6C9A8;
+    --ink:#F2EEF9;
+    --ink-soft:#9A8FB5;
+    --line:#332A4A;
+    --ok:#4ADE80;
+    --warn:#FBBF24;
+    --danger:#F87171;
+    --radius:14px;
+    --display:'Space Grotesk', system-ui, sans-serif;
+    --mono:'JetBrains Mono', ui-monospace, monospace;
+    --sans:'Space Grotesk', system-ui, sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(20,16,25,.82);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:1.1rem;letter-spacing:.01em}
+  .brand img{width:32px;height:32px;border-radius:8px}
+  .brand .tag{font-family:var(--mono);font-size:.62rem;color:var(--lavanda-bright);background:var(--surface2);padding:3px 8px;border-radius:6px;border:1px solid var(--line)}
+  .nav-links{display:flex;gap:30px;font-size:.93rem;color:var(--ink-soft);font-weight:500}
+  .nav-links a{text-decoration:none;transition:color .2s}
+  .nav-links a:hover{color:var(--lavanda)}
+  .nav-cta{
+    background:var(--beige);color:#3A2A12;font-weight:700;font-size:.9rem;
+    border:none;border-radius:10px;padding:10px 18px;cursor:pointer;text-decoration:none;
+    transition:transform .18s, background .18s;
+  }
+  .nav-cta:hover{background:#F2D9B8;transform:translateY(-1px)}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:104px 0 72px;position:relative;overflow:hidden}
+  .hero::before{
+    content:'';position:absolute;inset:0;z-index:-1;
+    background:
+      radial-gradient(700px 400px at 78% 8%, rgba(124,58,237,.28), transparent 62%),
+      radial-gradient(500px 300px at 8% 30%, rgba(197,180,227,.10), transparent 60%);
+  }
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}
+  .ver{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:.74rem;color:var(--lavanda);
+    border:1px solid var(--lavanda-deep);background:rgba(124,58,237,.12);
+    padding:6px 12px;border-radius:999px;margin-bottom:26px;
+  }
+  .ver .pulse{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+  .hero h1{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(2.5rem,5.2vw,4.1rem);line-height:1.02;letter-spacing:-.03em;
+  }
+  .hero h1 .accent{color:var(--beige)}
+  .hero h1 .dim{color:var(--ink-soft)}
+  .hero p.lead{margin-top:26px;font-size:1.13rem;color:var(--ink-soft);max-width:33em}
+  .hero p.lead b{color:var(--lavanda);font-weight:600}
+  .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+  .btn-primary{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--beige);color:#3A2A12;font-weight:700;font-size:1rem;
+    border:none;border-radius:12px;padding:15px 26px;cursor:pointer;text-decoration:none;
+    transition:transform .2s;box-shadow:0 10px 30px -8px rgba(230,201,168,.35);
+  }
+  .btn-primary:hover{transform:translateY(-2px)}
+  .btn-outline{
+    display:inline-flex;align-items:center;gap:8px;
+    background:transparent;border:1px solid var(--line);color:var(--ink);
+    border-radius:12px;padding:14px 22px;font-weight:600;font-size:.96rem;cursor:pointer;text-decoration:none;
+    transition:border-color .2s, background .2s;
+  }
+  .btn-outline:hover{border-color:var(--lavanda-deep);background:rgba(124,58,237,.08)}
+  .hero-meta{margin-top:16px;font-family:var(--mono);font-size:.76rem;color:var(--ink-soft)}
+  .hero-meta b{color:var(--lavanda)}
+
+  /* hero visual — dark mockup */
+  .hero-visual{position:relative}
+  .glow{
+    position:absolute;inset:-30px;z-index:0;
+    background:radial-gradient(380px 260px at 60% 40%, rgba(124,58,237,.35), transparent 70%);
+    filter:blur(6px);
+  }
+  .app{
+    position:relative;z-index:1;background:var(--surface);
+    border:1px solid var(--line);border-radius:18px;overflow:hidden;
+    box-shadow:0 40px 90px -30px rgba(0,0,0,.7);
+  }
+  .app-bar{display:flex;align-items:center;gap:8px;padding:13px 16px;background:var(--bg2);border-bottom:1px solid var(--line)}
+  .app-bar .dot{width:10px;height:10px;border-radius:50%;background:#3A3150}
+  .app-bar .dot:nth-child(1){background:#7F4A4A}.app-bar .dot:nth-child(2){background:#7F6A3A}
+  .app-body{display:grid;grid-template-columns:150px 1fr}
+  .app-side{background:var(--bg2);border-right:1px solid var(--line);padding:14px 10px}
+  .side-i{display:flex;align-items:center;gap:9px;font-size:.8rem;padding:8px 10px;border-radius:8px;color:var(--ink-soft);margin-bottom:3px}
+  .side-i.on{background:var(--surface2);color:var(--lavanda);border:1px solid var(--line)}
+  .app-main{padding:18px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .kpi{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+  .kpi .n{font-family:var(--mono);font-weight:600;font-size:1.25rem;color:var(--lavanda)}
+  .kpi .n.g{color:var(--ok)} .kpi .n.w{color:var(--warn)} .kpi .n.d{color:var(--danger)}
+  .kpi .l{font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-soft);font-weight:600}
+  table.t{width:100%;border-collapse:collapse;font-size:.78rem}
+  table.t th{text-align:left;padding:8px 10px;color:var(--ink-soft);font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--line);font-family:var(--mono)}
+  table.t td{padding:8px 10px;border-bottom:1px solid #241D36;font-family:var(--mono);font-size:.74rem}
+  table.t td:first-child{color:var(--lavanda);font-weight:600}
+  .pill{display:inline-block;font-size:.62rem;font-weight:700;padding:2px 9px;border-radius:999px;font-family:var(--sans)}
+  .pill.ok{background:rgba(74,222,128,.14);color:var(--ok)}
+  .pill.warn{background:rgba(251,191,36,.14);color:var(--warn)}
+  .pill.danger{background:rgba(248,113,113,.14);color:var(--danger)}
+  .float-mono{
+    position:absolute;bottom:-16px;left:-14px;z-index:2;
+    font-family:var(--mono);font-size:.72rem;color:var(--lavanda);
+    background:var(--surface2);border:1px solid var(--lavanda-deep);
+    padding:10px 14px;border-radius:10px;
+    box-shadow:0 14px 30px rgba(0,0,0,.5);
+  }
+  .float-mono b{color:var(--beige)}
+
+  /* ---------- Stats strip ---------- */
+  .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2)}
+  .strip-in{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:40px 0}
+  .stat .num{font-family:var(--display);font-weight:700;font-size:2.2rem;letter-spacing:-.02em;color:var(--lavanda)}
+  .stat .lbl{font-size:.85rem;color:var(--ink-soft);margin-top:4px}
+  .stat .num em{font-style:normal;color:var(--beige)}
+
+  /* ---------- Features ---------- */
+  .feat{padding:96px 0}
+  .feat-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;gap:30px;flex-wrap:wrap}
+  .feat-head h2{font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,3.4vw,2.7rem);letter-spacing:-.02em;line-height:1.08;max-width:16em}
+  .feat-head h2 span{color:var(--beige)}
+  .feat-head .idx{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft)}
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .f{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:30px 26px;background:var(--bg);transition:background .2s}
+  .f:nth-child(3n){border-right:none}
+  .f:nth-child(n+4){border-bottom:none}
+  .f:hover{background:var(--surface)}
+  .f .n{font-family:var(--mono);font-size:.7rem;color:var(--lavanda-deep);font-weight:600}
+  .f h3{font-family:var(--display);font-weight:600;font-size:1.15rem;margin:12px 0 8px;letter-spacing:-.01em}
+  .f p{font-size:.9rem;color:var(--ink-soft)}
+
+  /* ---------- Files / privacy ---------- */
+  .privacy{padding:70px 0;border-top:1px solid var(--line);background:var(--bg2)}
+  .priv-in{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+  .priv-in h2{font-family:var(--display);font-weight:700;font-size:clamp(1.7rem,3vw,2.3rem);letter-spacing:-.02em;margin-bottom:16px}
+  .priv-in h2 span{color:var(--beige)}
+  .priv-in p{color:var(--ink-soft);font-size:1.03rem;margin-bottom:22px}
+  .code{
+    background:var(--bg);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    font-family:var(--mono);font-size:.8rem;
+  }
+  .code .bar{display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--surface)}
+  .code .bar i{width:9px;height:9px;border-radius:50%;background:#3A3150;font-style:normal}
+  .code pre{padding:20px 22px;line-height:1.7;color:var(--lavanda)}
+  .code pre .cm{color:var(--ink-soft)}
+  .code pre .kw{color:var(--beige)}
+  .code pre .st{color:var(--lavanda-bright)}
+
+  /* ---------- Download ---------- */
+  .download{padding:96px 0}
+  .dl{display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+  .dl h2{font-family:var(--display);font-weight:700;font-size:clamp(2rem,3.6vw,2.9rem);letter-spacing:-.02em;line-height:1.05}
+  .dl h2 span{color:var(--beige)}
+  .dl p{margin:18px 0 30px;color:var(--ink-soft);font-size:1.06rem;max-width:30em}
+  .dl-big{
+    display:inline-flex;align-items:center;gap:14px;
+    background:var(--lavanda-deep);color:#fff;text-decoration:none;
+    border-radius:14px;padding:18px 30px;font-weight:700;font-size:1.05rem;
+    box-shadow:0 14px 34px -8px rgba(124,58,237,.5);transition:transform .2s;
+  }
+  .dl-big:hover{transform:translateY(-2px)}
+  .dl-meta{margin-top:16px;font-family:var(--mono);font-size:.76rem;color:var(--ink-soft);line-height:1.9}
+  .dl-box{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px}
+  .dl-box h4{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-soft);margin-bottom:16px}
+  .dl-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+  .dl-row:last-child{border-bottom:none}
+  .dl-row .k{color:var(--ink-soft)}
+  .dl-row .v{font-family:var(--mono);font-size:.8rem;color:var(--lavanda)}
+
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--line);padding:44px 0}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  .foot .brand{font-size:1rem}
+  .foot p{font-size:.84rem;color:var(--ink-soft)}
+  .foot-links{display:flex;gap:24px;font-size:.88rem;color:var(--ink-soft)}
+  .foot-links a{text-decoration:none}
+  .foot-links a:hover{color:var(--lavanda)}
+
+  @media (max-width:960px){
+    .hero-grid{grid-template-columns:1fr;gap:52px}
+    .strip-in{grid-template-columns:repeat(2,1fr)}
+    .feat-grid{grid-template-columns:1fr 1fr}
+    .f:nth-child(3n){border-right:1px solid var(--line)}
+    .f:nth-child(2n){border-right:none}
+    .f:nth-child(n+3){border-bottom:1px solid var(--line)}
+    .f:nth-child(n+5){border-bottom:none}
+    .priv-in{grid-template-columns:1fr}
+    .dl{grid-template-columns:1fr}
+    .nav-links{display:none}
+  }
+  @media (max-width:600px){
+    .feat-grid{grid-template-columns:1fr}
+    .f{border-right:none!important;border-bottom:1px solid var(--line)!important}
+    .f:last-child{border-bottom:none!important}
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .app-body{grid-template-columns:1fr}
+    .app-side{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <div class="brand"><img src="assets/icon.png" alt="">Lotcare <span class="tag">v1.0.0</span></div>
+    <div class="nav-links">
+      <a href="#funzionalita">Funzionalità</a>
+      <a href="#files">File</a>
+      <a href="#download">Download</a>
+    </div>
+    <a class="nav-cta" href="#download">Scarica →</a>
+  </div>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="ver"><span class="pulse"></span> LOTCARE 1.0.0 — WINDOWS</span>
+        <h1>Produzione <span class="accent">sotto controllo</span>,<br><span class="dim">un lotto alla volta.</span></h1>
+        <p class="lead">Registra ogni lotto con ingredienti, fornitori e scadenze. Segui vendite e giacenze. <b>Dati locali in file Markdown</b> — nessun cloud, nessun account, nessuna sorpresa.</p>
+        <div class="hero-cta">
+          <a class="btn-primary" href="#download">⬇ Scarica per Windows</a>
+          <a class="btn-outline" href="#funzionalita">Vedi le funzionalità</a>
+        </div>
+        <p class="hero-meta">setup.exe <b>~95 MB</b> · Win 10/11 x64 · auto-update integrato</p>
+      </div>
+      <div class="hero-visual">
+        <div class="glow"></div>
+        <div class="app">
+          <div class="app-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="app-body">
+            <aside class="app-side">
+              <div class="side-i on">🏠 Tutte</div>
+              <div class="side-i">📦 Lotti</div>
+              <div class="side-i">👥 Clienti</div>
+              <div class="side-i">🏭 Fornitori</div>
+              <div class="side-i">📊 Report</div>
+            </aside>
+            <div class="app-main">
+              <div class="kpis">
+                <div class="kpi"><div class="n">124</div><div class="l">Lotti</div></div>
+                <div class="kpi"><div class="n g">96</div><div class="l">Attivi</div></div>
+                <div class="kpi"><div class="n w">5</div><div class="l">Scadenze</div></div>
+                <div class="kpi"><div class="n d">2</div><div class="l">Esauriti</div></div>
+              </div>
+              <table class="t">
+                <tr><th>Lotto</th><th>Rimanente</th><th>Stato</th></tr>
+                <tr><td>LOTTO-2026-041</td><td>310/500</td><td><span class="pill ok">attivo</span></td></tr>
+                <tr><td>LOTTO-2026-040</td><td>80/1200</td><td><span class="pill warn">basso</span></td></tr>
+                <tr><td>LOTTO-2026-039</td><td>0/800</td><td><span class="pill danger">esaurito</span></td></tr>
+                <tr><td>LOTTO-2026-038</td><td>600/600</td><td><span class="pill ok">attivo</span></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="float-mono">→ <b>LOTTO-2026-041.md</b> · 1.2 KB · aggiornato ora</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="strip">
+    <div class="wrap strip-in">
+      <div class="stat"><div class="num">100<em>%</em></div><div class="lbl">dati locali, zero cloud</div></div>
+      <div class="stat"><div class="num">1<em>×</em></div><div class="lbl">report automatico, sempre aggiornato</div></div>
+      <div class="stat"><div class="num">2</div><div class="lbl">lingue: italiano &amp; english</div></div>
+      <div class="stat"><div class="num">0</div><div class="lbl">fogli di calcolo sparsi</div></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="feat" id="funzionalita">
+    <div class="wrap">
+      <div class="feat-head">
+        <h2>Strumenti <span>precisi</span> per una produzione seria</h2>
+        <span class="idx">// 06 moduli</span>
+      </div>
+      <div class="feat-grid">
+        <div class="f"><div class="n">01</div><h3>Registrazione lotti</h3><p>Modulo guidato: numero lotto, tipologia, quantità, ingredienti con fornitore, lotto di origine e scadenza.</p></div>
+        <div class="f"><div class="n">02</div><h3>Dashboard KPI</h3><p>Attivi, esauriti, sotto soglia, scadenze: lo stato della produzione, sempre in prima pagina.</p></div>
+        <div class="f"><div class="n">03</div><h3>Fascicolo lotto</h3><p>Timeline eventi, QC ✓/↻/✕, note con tag, allegati PDF, storico vendite: la vita intera del lotto.</p></div>
+        <div class="f"><div class="n">04</div><h3>Clienti &amp; fornitori</h3><p>Anagrafiche collegate con link bidirezionali. Tracciabilità completa: da chi compra a chi fornisce.</p></div>
+        <div class="f"><div class="n">05</div><h3>Avvisi &amp; soglie</h3><p>Scadenze ingredienti e giacenze basse segnalate automaticamente, con soglie personalizzabili.</p></div>
+        <div class="f"><div class="n">06</div><h3>Ricerca full-text</h3><p>Cerca in nomi file e contenuti con evidenziazione. Ritrova qualsiasi lotto in un istante.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY / FILES -->
+  <section class="privacy" id="files">
+    <div class="wrap priv-in">
+      <div>
+        <h2>I tuoi dati sono <span>solo tuoi</span></h2>
+        <p>Ogni lotto è un file Markdown in una cartella locale. Leggibile con qualsiasi editor, esportabile, portabile — anche tra dieci anni. Niente account, niente telemetria, niente lock-in.</p>
+        <p><b style="color:var(--lavanda)">Lotcare funziona anche senza di noi:</b> chiudi l'app e i dati restano lì, aperti e consultabili.</p>
+      </div>
+      <div class="code">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <pre><span class="cm"># Lotti di produzione/LOTTO-2026-041.md</span>
+<span class="kw">lotto di produzione n°:</span> 2026-041
+<span class="kw">tipologia prodotto:</span> "Tavoletta fondente 70%"
+<span class="kw">data di produzione:</span> 2026-09-01
+<span class="kw">quantità prodotta:</span> 500
+<span class="kw">quantità rimanente:</span> 310
+
+<span class="cm">## Ingredienti</span>
+<span class="st">| Zucchero | 10 kg | [[Fornitori/...]] | CZCK1 | 2027-01-15 |</span>
+<span class="st">| Cacao    | 6 kg  | [[Fornitori/...]] | J60B03 | 2026-12-20 |</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section class="download" id="download">
+    <div class="wrap dl">
+      <div>
+        <h2>Pronto a <span>provare?</span></h2>
+        <p>Installa in due minuti. Gli aggiornamenti futuri arrivano da soli, direttamente dall'app.</p>
+        <a class="dl-big" href="download/lotcare-1.0.0-setup.exe">⬇ Scarica Lotcare 1.0.0</a>
+        <div class="dl-meta">SHA-256: <span style="color:var(--lavanda)">verifica dopo la build finale</span><br>Pubblicato: 2026-09-04 · Canale: stable</div>
+      </div>
+      <div class="dl-box">
+        <h4>Dettagli release</h4>
+        <div class="dl-row"><span class="k">Versione</span><span class="v">1.0.0</span></div>
+        <div class="dl-row"><span class="k">Peso installer</span><span class="v">~95 MB</span></div>
+        <div class="dl-row"><span class="k">OS</span><span class="v">Windows 10/11</span></div>
+        <div class="dl-row"><span class="k">Architettura</span><span class="v">x64</span></div>
+        <div class="dl-row"><span class="k">Auto-update</span><span class="v" style="color:var(--ok)">✓ attivo</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div class="brand"><img src="assets/icon.png" alt="" style="width:26px;height:26px">Lotcare</div>
+    <p>© 2026 Lotcare · Lotti di produzione, in locale.</p>
+    <div class="foot-links">
+      <a href="#funzionalita">Funzionalità</a>
+      <a href="#files">File</a>
+      <a href="#download">Download</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

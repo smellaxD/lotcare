@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lotcare — Confronto prototipi</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI', system-ui, sans-serif;background:#141019;color:#F2EEF9;line-height:1.5}
+  .wrap{max-width:1280px;margin:0 auto;padding:32px 24px}
+  h1{font-size:1.6rem;margin-bottom:6px}
+  .sub{color:#9A8FB5;margin-bottom:28px;font-size:.95rem}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .card{background:#1F1830;border:1px solid #332A4A;border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+  .card .top{padding:16px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #332A4A}
+  .card h2{font-size:1.05rem}
+  .card .tag{font-size:.68rem;font-weight:700;padding:4px 10px;border-radius:999px;letter-spacing:.03em}
+  .t1{background:rgba(197,180,227,.18);color:#C5B4E3}
+  .t2{background:rgba(167,139,250,.18);color:#A78BFA}
+  .t3{background:rgba(230,201,168,.18);color:#E6C9A8}
+  .shot{flex:1;min-height:0}
+  .shot img{width:100%;display:block}
+  .desc{padding:14px 18px 18px;font-size:.85rem;color:#9A8FB5;flex-shrink:0}
+  .desc b{color:#F2EEF9}
+  .btns{padding:0 18px 18px;display:flex;gap:10px;flex-shrink:0}
+  .btn{
+    flex:1;text-align:center;text-decoration:none;border-radius:10px;padding:11px 14px;
+    font-weight:600;font-size:.86rem;transition:transform .15s;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn-ghost{background:transparent;border:1px solid #332A4A;color:#F2EEF9}
+  .btn-open{background:#7C3AED;color:#fff}
+  @media (max-width:980px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎨 Prototipi sito Lotcare — confronto</h1>
+  <p class="sub">3 varianti di design, stessa palette brand (lavanda/viola/beige dal logo). Tutte verificate: 0 errori console.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="top"><h2>V1 · Artigianale</h2><span class="tag t1">editoriale · caldo</span></div>
+      <div class="shot"><img src="screenshot-V1.png" alt="V1 artigianale"></div>
+      <div class="desc"><b>Postura:</b> serif elegante, crema/beige, sezione scura a contrasto, mockup ruotato.<br><b>Vibe:</b> fiducia artigianale, "prodotto fatto bene per chi produce davvero".</div>
+      <div class="btns"><a class="btn btn-open" href="V1-artigianale.html" target="_blank">Apri V1</a></div>
+    </div>
+    <div class="card">
+      <div class="top"><h2>V2 · SaaS Moderno</h2><span class="tag t2">pulito · prodotto</span></div>
+      <div class="shot"><img src="screenshot-V2.png" alt="V2 saas moderno"></div>
+      <div class="desc"><b>Postura:</b> Inter, bianco/viola, hero con mockup in browser-frame, card grid, sezione split.<br><b>Vibe:</b> software professionale, stile Linear/Vercel, massima chiarezza.</div>
+      <div class="btns"><a class="btn btn-open" href="V2-saas-moderno.html" target="_blank">Apri V2</a></div>
+    </div>
+    <div class="card">
+      <div class="top"><h2>V3 · Dark Bold</h2><span class="tag t3">dark · premium</span></div>
+      <div class="shot"><img src="screenshot-V3.png" alt="V3 dark bold"></div>
+      <div class="desc"><b>Postura:</b> dark viola, Space Grotesk, mono per i dati, sezione codice Markdown, spec release.<br><b>Vibe:</b> strumento tecnico premium, "i dati sono tuoi e li vedi tu".</div>
+      <div class="btns"><a class="btn btn-open" href="V3-dark-bold.html" target="_blank">Apri V3</a></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

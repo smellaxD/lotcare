@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lotcare — Gestione lotti di produzione</title>
+<meta name="description" content="Lotcare: gestione lotti di produzione, clienti e fornitori. Tutto in locale, in semplici file Markdown.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --lavanda:#C5B4E3;
+    --lavanda-scuro:#7C3AED;
+    --lavanda-medio:#A78BFA;
+    --beige:#E6C9A8;
+    --crema:#FAF6F0;
+    --crema-scura:#F1E9DD;
+    --inchiostro:#2B2338;
+    --inchiostro-soft:#5A4F6B;
+    --bordo:#E3D9C8;
+    --bianco:#FFFFFF;
+    --ok:#3E7C4F;
+    --warn:#B97A1F;
+    --danger:#B0413E;
+    --radius:14px;
+    --serif:'Fraunces', Georgia, 'Times New Roman', serif;
+    --sans:'Inter', system-ui, -apple-system, sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--sans);
+    color:var(--inchiostro);
+    background:var(--crema);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+  /* ---------- Header ---------- */
+  header{
+    padding:26px 0 20px;
+    border-bottom:1px solid var(--bordo);
+    background:color-mix(in srgb, var(--crema) 88%, transparent);
+    backdrop-filter:blur(8px);
+    position:sticky;top:0;z-index:50;
+  }
+  .brand{
+    display:flex;align-items:center;gap:14px;
+    font-family:var(--serif);font-weight:600;font-size:1.45rem;
+  }
+  .brand img{width:44px;height:44px;border-radius:10px;transform:rotate(-6deg);box-shadow:0 4px 10px rgba(43,35,56,.15)}
+  .nav{display:flex;align-items:center;justify-content:space-between}
+  .nav-links{display:flex;gap:30px;font-size:.95rem;font-weight:500}
+  .nav-links a{text-decoration:none;color:var(--inchiostro-soft);transition:color .2s}
+  .nav-links a:hover{color:var(--lavanda-scuro)}
+  .btn-download{
+    background:var(--inchiostro);color:var(--crema);
+    border:none;border-radius:999px;padding:11px 22px;
+    font-family:var(--sans);font-weight:600;font-size:.92rem;cursor:pointer;
+    transition:transform .2s, background .2s;
+  }
+  .btn-download:hover{background:var(--lavanda-scuro);transform:translateY(-1px)}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    display:grid;grid-template-columns:1.05fr .95fr;gap:60px;
+    padding:84px 0 72px;align-items:center;
+  }
+  .hero .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--beige);color:#5C4320;
+    font-size:.8rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    padding:7px 14px;border-radius:999px;margin-bottom:22px;
+  }
+  .hero h1{
+    font-family:var(--serif);font-weight:600;line-height:1.08;
+    font-size:clamp(2.5rem, 5vw, 3.9rem);letter-spacing:-.015em;
+  }
+  .hero h1 em{
+    font-style:italic;color:var(--lavanda-scuro);
+    position:relative;white-space:nowrap;
+  }
+  .hero h1 em::after{
+    content:'';position:absolute;left:0;right:0;bottom:.06em;height:.16em;
+    background:var(--beige);z-index:-1;
+  }
+  .hero p.lead{
+    margin-top:24px;font-size:1.16rem;color:var(--inchiostro-soft);max-width:34em;
+  }
+  .hero-cta{display:flex;align-items:center;gap:18px;margin-top:34px;flex-wrap:wrap}
+  .btn-primary{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--lavanda-scuro);color:#fff;
+    border:none;border-radius:12px;padding:15px 26px;
+    font-family:var(--sans);font-weight:600;font-size:1rem;cursor:pointer;
+    box-shadow:0 8px 22px rgba(124,58,237,.28);
+    transition:transform .2s, box-shadow .2s;
+    text-decoration:none;
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(124,58,237,.36)}
+  .btn-ghost{
+    display:inline-flex;align-items:center;gap:8px;
+    background:transparent;border:1.5px solid var(--inchiostro);
+    border-radius:12px;padding:14px 22px;
+    font-family:var(--sans);font-weight:600;font-size:.98rem;cursor:pointer;text-decoration:none;
+    transition:background .2s;
+  }
+  .btn-ghost:hover{background:var(--crema-scura)}
+  .hero-note{margin-top:16px;font-size:.85rem;color:var(--inchiostro-soft)}
+
+  /* visual: mockup app */
+  .hero-visual{position:relative}
+  .app-window{
+    background:var(--bianco);border-radius:18px;border:1px solid var(--bordo);
+    box-shadow:0 30px 60px -18px rgba(43,35,56,.28);
+    overflow:hidden;transform:rotate(-1.5deg);
+  }
+  .window-bar{
+    display:flex;align-items:center;gap:8px;padding:12px 16px;
+    background:var(--crema-scura);border-bottom:1px solid var(--bordo);
+  }
+  .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#E8837E}.dot.y{background:#E9C46A}.dot.g{background:#86C98A}
+  .window-bar .title{margin-left:10px;font-size:.8rem;color:var(--inchiostro-soft);font-weight:500}
+  .app-body{display:grid;grid-template-columns:150px 1fr;min-height:340px}
+  .app-sidebar{background:var(--crema);border-right:1px solid var(--bordo);padding:14px 10px}
+  .side-item{
+    display:flex;align-items:center;gap:8px;font-size:.8rem;padding:8px 10px;
+    border-radius:8px;color:var(--inchiostro-soft);margin-bottom:4px;
+  }
+  .side-item.active{background:color-mix(in srgb, var(--lavanda) 45%, white);color:var(--inchiostro);font-weight:600}
+  .app-main{padding:18px}
+  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .kpi{
+    background:var(--crema);border:1px solid var(--bordo);border-radius:10px;padding:10px 12px;
+  }
+  .kpi .v{font-family:var(--serif);font-weight:600;font-size:1.35rem;line-height:1.1}
+  .kpi .l{font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;color:var(--inchiostro-soft)}
+  .kpi.g .v{color:var(--ok)} .kpi.w .v{color:var(--warn)} .kpi.d .v{color:var(--danger)}
+  table.lotti{width:100%;border-collapse:collapse;font-size:.78rem}
+  table.lotti th{text-align:left;font-weight:600;color:var(--inchiostro-soft);padding:8px 10px;border-bottom:1.5px solid var(--bordo);font-size:.68rem;text-transform:uppercase;letter-spacing:.04em}
+  table.lotti td{padding:8px 10px;border-bottom:1px solid var(--crema-scura)}
+  .badge{display:inline-block;font-size:.66rem;font-weight:600;padding:3px 9px;border-radius:999px}
+  .badge.ok{background:#E3F1E6;color:var(--ok)}
+  .badge.warn{background:#FAEED9;color:var(--warn)}
+  .badge.danger{background:#F8E3E2;color:var(--danger)}
+  .float-tag{
+    position:absolute;top:-18px;right:-10px;
+    background:var(--lavanda);color:var(--inchiostro);
+    font-family:var(--serif);font-style:italic;font-weight:600;
+    padding:12px 18px;border-radius:12px;font-size:.95rem;
+    box-shadow:0 10px 24px rgba(124,58,237,.22);transform:rotate(2.5deg);
+  }
+
+  /* ---------- Feature editoriali ---------- */
+  .features{padding:90px 0;border-top:1px solid var(--bordo)}
+  .features-head{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:64px;align-items:end}
+  .features-head h2{
+    font-family:var(--serif);font-weight:600;font-size:clamp(1.9rem,3.4vw,2.7rem);line-height:1.12;
+  }
+  .features-head p{color:var(--inchiostro-soft);font-size:1.05rem}
+  .feature-list{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1.5px solid var(--inchiostro)}
+  .feature{
+    padding:30px 26px;border-bottom:1px solid var(--bordo);
+    display:grid;grid-template-columns:52px 1fr;gap:18px;align-items:start;
+    transition:background .2s;
+  }
+  .feature:nth-child(odd){border-right:1px solid var(--bordo)}
+  .feature:hover{background:var(--crema-scura)}
+  .feature .num{
+    font-family:var(--serif);font-style:italic;font-size:1.5rem;color:var(--lavanda-scuro);line-height:1;
+  }
+  .feature h3{font-family:var(--serif);font-weight:600;font-size:1.22rem;margin-bottom:6px}
+  .feature p{font-size:.94rem;color:var(--inchiostro-soft)}
+
+  /* ---------- Come funziona ---------- */
+  .how{padding:90px 0;background:var(--inchiostro);color:var(--crema);border-radius:0}
+  .how .wrap{position:relative}
+  .how h2{font-family:var(--serif);font-weight:600;font-size:clamp(1.9rem,3.4vw,2.6rem);margin-bottom:54px}
+  .how h2 em{color:var(--lavanda-medio);font-style:italic}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;counter-reset:step}
+  .step{position:relative;padding-top:14px}
+  .step::before{
+    counter-increment:step;content:'0' counter(step);
+    font-family:var(--serif);font-style:italic;font-size:1.1rem;color:var(--beige);
+    display:block;margin-bottom:14px;
+  }
+  .step h3{font-family:var(--serif);font-weight:600;font-size:1.25rem;margin-bottom:8px}
+  .step p{color:#B9AEC9;font-size:.95rem}
+  .step p b{color:var(--crema);font-weight:600}
+  .how-note{margin-top:52px;padding:20px 24px;background:rgba(197,180,227,.12);border-left:3px solid var(--lavanda-medio);border-radius:0 10px 10px 0;font-size:.92rem;color:#B9AEC9}
+
+  /* ---------- Download ---------- */
+  .download{padding:96px 0}
+  .download-card{
+    background:var(--bianco);border:1px solid var(--bordo);border-radius:20px;
+    padding:48px;display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;
+    box-shadow:0 20px 44px -20px rgba(43,35,56,.2);
+  }
+  .download h2{font-family:var(--serif);font-weight:600;font-size:clamp(1.8rem,3vw,2.4rem);line-height:1.15;margin-bottom:12px}
+  .download p{color:var(--inchiostro-soft);font-size:1.02rem;margin-bottom:26px}
+  .dl-big{
+    display:inline-flex;align-items:center;gap:14px;
+    background:var(--lavanda-scuro);color:#fff;text-decoration:none;
+    border-radius:14px;padding:18px 28px;font-weight:600;font-size:1.05rem;
+    box-shadow:0 10px 26px rgba(124,58,237,.3);transition:transform .2s;
+  }
+  .dl-big:hover{transform:translateY(-2px)}
+  .dl-meta{font-size:.85rem;color:var(--inchiostro-soft);margin-top:14px;line-height:1.8}
+  .dl-side{display:flex;flex-direction:column;gap:14px}
+  .dl-check{display:flex;align-items:center;gap:12px;font-size:.95rem;padding:14px 16px;background:var(--crema);border-radius:12px;border:1px solid var(--bordo)}
+  .dl-check .c{width:26px;height:26px;border-radius:50%;background:#E3F1E6;color:var(--ok);display:grid;place-items:center;font-weight:700;flex-shrink:0}
+
+  /* ---------- Footer ---------- */
+  footer{border-top:1px solid var(--bordo);padding:44px 0 60px;background:var(--crema-scura)}
+  .foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  .foot .brand{font-size:1.15rem}
+  .foot p{font-size:.85rem;color:var(--inchiostro-soft)}
+  .foot-links{display:flex;gap:22px;font-size:.88rem}
+  .foot-links a{color:var(--inchiostro-soft);text-decoration:none}
+  .foot-links a:hover{color:var(--lavanda-scuro)}
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr;padding:54px 0 60px;gap:44px}
+    .features-head{grid-template-columns:1fr;gap:18px}
+    .feature-list{grid-template-columns:1fr}
+    .feature:nth-child(odd){border-right:none}
+    .steps{grid-template-columns:1fr;gap:34px}
+    .download-card{grid-template-columns:1fr;padding:34px 26px}
+    .nav-links{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><img src="assets/icon.png" alt="">Lotcare</div>
+    <nav class="nav-links">
+      <a href="#funzionalita">Funzionalità</a>
+      <a href="#come-funziona">Come funziona</a>
+      <a href="#download">Download</a>
+    </nav>
+    <a class="btn-download" href="#download">Scarica ora</a>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero wrap">
+    <div>
+      <span class="kicker">✦ Per piccole e medie produzioni</span>
+      <h1>I tuoi lotti di produzione, <em>ordinati.</em> Sempre.</h1>
+      <p class="lead">Lotcare registra ogni lotto, tiene traccia di ingredienti, fornitori e clienti, e aggiorna tutto in semplici file Markdown — <strong>sul tuo computer, senza cloud</strong>. I tuoi dati restano tuoi.</p>
+      <div class="hero-cta">
+        <a class="btn-primary" href="#download">⬇ Scarica per Windows</a>
+        <a class="btn-ghost" href="#funzionalita">Scopri le funzionalità →</a>
+      </div>
+      <p class="hero-note">Versione 1.0.0 · Installer ~95 MB · Aggiornamenti automatici</p>
+    </div>
+    <div class="hero-visual">
+      <div class="float-tag">dati locali, zero cloud</div>
+      <div class="app-window">
+        <div class="window-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="title">Lotcare — Dashboard</span>
+        </div>
+        <div class="app-body">
+          <aside class="app-sidebar">
+            <div class="side-item active">🏠 Tutte</div>
+            <div class="side-item">📦 Lotti</div>
+            <div class="side-item">👥 Clienti</div>
+            <div class="side-item">🏭 Fornitori</div>
+            <div class="side-item">🧾 Fatture</div>
+            <div class="side-item">📊 Report</div>
+          </aside>
+          <div class="app-main">
+            <div class="kpi-row">
+              <div class="kpi"><div class="v">124</div><div class="l">Lotti totali</div></div>
+              <div class="kpi g"><div class="v">96</div><div class="l">Attivi</div></div>
+              <div class="kpi w"><div class="v">5</div><div class="l">Scadenze ≤ 30g</div></div>
+              <div class="kpi d"><div class="v">2</div><div class="l">Esauriti</div></div>
+            </div>
+            <table class="lotti">
+              <tr><th>Lotto</th><th>Tipologia</th><th>Prodotta</th><th>Rimanente</th><th>Stato</th></tr>
+              <tr><td><b>LOTTO-2026-041</b></td><td>Tavoletta fondente 70%</td><td>500</td><td>310</td><td><span class="badge ok">attivo</span></td></tr>
+              <tr><td><b>LOTTO-2026-040</b></td><td>Bustine cacao 25g</td><td>1200</td><td>80</td><td><span class="badge warn">basso</span></td></tr>
+              <tr><td><b>LOTTO-2026-039</b></td><td>Cialde arabica</td><td>800</td><td>0</td><td><span class="badge danger">esaurito</span></td></tr>
+              <tr><td><b>LOTTO-2026-038</b></td><td>Tavoletta al latte 45%</td><td>600</td><td>600</td><td><span class="badge ok">attivo</span></td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="funzionalita">
+    <div class="wrap">
+      <div class="features-head">
+        <h2>Una cassetta degli attrezzi completa per la tua produzione</h2>
+        <p>Pensato per chi produce davvero: dalla materia prima alla vendita, ogni passaggio lascia una traccia leggibile e consultabile.</p>
+      </div>
+      <div class="feature-list">
+        <div class="feature">
+          <span class="num">01</span>
+          <div><h3>Registrazione lotti</h3><p>Numero lotto, tipologia, quantità, ingredienti con fornitori e scadenze. Inserimento guidato, senza errori.</p></div>
+        </div>
+        <div class="feature">
+          <span class="num">02</span>
+          <div><h3>Dashboard KPI</h3><p>Lotti attivi, scadenze prossime, giacenze sotto soglia: la salute della produzione a colpo d'occhio.</p></div>
+        </div>
+        <div class="feature">
+          <span class="num">03</span>
+          <div><h3>Fascicolo lotto</h3><p>Per ogni lotto: timeline eventi, controllo qualità ✓/↻/✕, note con tag, allegati e storico vendite.</p></div>
+        </div>
+        <div class="feature">
+          <span class="num">04</span>
+          <div><h3>Clienti &amp; fornitori</h3><p>Anagrafiche collegate ai lotti con link bidirezionali: chi ha comprato cosa, da chi arriva ogni ingrediente.</p></div>
+        </div>
+        <div class="feature">
+          <span class="num">05</span>
+          <div><h3>Avvisi intelligenti</h3><p>Scadenze ingredienti e quantità sotto soglia segnalate automaticamente. Soglie personalizzabili.</p></div>
+        </div>
+        <div class="feature">
+          <span class="num">06</span>
+          <div><h3>File aperti</h3><p>Ogni lotto è un file Markdown leggibile e portabile. Importa, esporta, sposta: i dati sono sempre sotto il tuo controllo.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COME FUNZIONA -->
+  <section class="how" id="come-funziona">
+    <div class="wrap">
+      <h2>Da ingrediente a vendita, <em>in tre passi</em></h2>
+      <div class="steps">
+        <div class="step">
+          <h3>Registra il lotto</h3>
+          <p>Compila il modulo guidato: ingredienti, <b>fornitore</b>, numero lotto di origine e scadenza. Il file nasce da solo.</p>
+        </div>
+        <div class="step">
+          <h3>Segui la produzione</h3>
+          <p>Controlli QC, eventi, note e allegati nella <b>timeline del fascicolo</b>. Nessuna informazione si perde.</p>
+        </div>
+        <div class="step">
+          <h3>Vendi e monitora</h3>
+          <p>Registra le vendite per cliente, la giacenza si aggiorna da sola, e il <b>report</b> si genera automaticamente.</p>
+        </div>
+      </div>
+      <div class="how-note">
+        <b>Privacy per scelta:</b> niente server, niente account, niente telemetria. Lotcare lavora su una cartella locale di file Markdown — puoi leggerli e modificarli con qualunque editor, anche tra dieci anni.
+      </div>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section class="download" id="download">
+    <div class="wrap">
+      <div class="download-card">
+        <div>
+          <h2>Scarica Lotcare 1.0</h2>
+          <p>Installazione guidata per Windows. Aggiornamenti automatici inclusi: quando esce una nuova versione, ti avvisiamo noi.</p>
+          <a class="dl-big" href="../../benvenuto-app/dist/lotcare-1.0.0-setup.exe">⬇ Scarica per Windows</a>
+          <div class="dl-meta">lotcare-1.0.0-setup.exe · ~95 MB<br>Windows 10 / 11 · x64</div>
+        </div>
+        <div class="dl-side">
+          <div class="dl-check"><span class="c">✓</span> Installazione guidata, senza sorprese</div>
+          <div class="dl-check"><span class="c">✓</span> Dati 100% locali</div>
+          <div class="dl-check"><span class="c">✓</span> Interfaccia in italiano e inglese</div>
+          <div class="dl-check"><span class="c">✓</span> Aggiornamenti automatici</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div class="brand"><img src="assets/icon.png" alt="" style="width:34px;height:34px">Lotcare</div>
+    <p>© 2026 Lotcare · Gestione lotti di produzione, in locale.</p>
+    <div class="foot-links">
+      <a href="#funzionalita">Funzionalità</a>
+      <a href="#come-funziona">Come funziona</a>
+      <a href="#download">Download</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
